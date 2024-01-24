@@ -31,7 +31,7 @@ module.exports = async (req_, res_) => {
         const oldInscription = await inscription.findOne({ btcAccount: btcAccount })
         // console.log('oldInscription: ', oldInscription)
         let nowInscription = await getInscriptions(btcAccount);
-        // console.log('nowInscription: ', nowInscription)
+        console.log('nowInscription: ', nowInscription)
 
         let oldInscriptionItems;
         if (!oldInscription) {

@@ -17,10 +17,10 @@ const EXPORT_OBJECT = {};
 // TODO
 EXPORT_OBJECT.ORD_CMD = 'ord wallet --name milo' // Bitcoin Mainnet
 EXPORT_OBJECT.FEE_RECOMMAND_API = "https://mempool.space/api/v1/fees/recommended"
-EXPORT_OBJECT.UTXO_API = "https://mempool.space/api/address/"
+const UTXO_API = "https://mempool.space/api/address/"
 // EXPORT_OBJECT.ORD_CMD = 'ord -t wallet --name milo' // Bitcoin Testnet
 // EXPORT_OBJECT.FEE_RECOMMAND_API = "https://mempool.space/testnet/api/v1/fees/recommended"
-// EXPORT_OBJECT.UTXO_API = "https://mempool.space/testnet/api/address/"
+// const UTXO_API = "https://mempool.space/testnet/api/address/"
 
 /********************************************************************************************/
 // Goerli Testnet
@@ -277,19 +277,20 @@ EXPORT_OBJECT.getInscriptions = async (btcAccount) => {
     const response = await axios.get(
       `${UTXO_API}/${btcAccount}/utxo`
     );
-    // console.log(response.data);
-    const inscriptions = []
-    for (let idx = 0; idx = response.data.length; idx++) {
-      const output = response.data[idx]
-      const isInscription = await axios.get(`https://ordinals.com/inscription/${output.txid}i${output.vout}`)
-      if (isInscription.data) {
-        const inscriptionData = await getInscriptionData(`${output.txid}i${output.vout}`)
-        inscriptions.push(inscriptionData.inscriptionData)
-      }
+    let inscriptions = []
+    for (let idx = 0; idx < response.data.length; idx++) {
+      let output = response.data[idx]
+      try {
+        const isInscription = await axios.get(`https://ordinals.com/inscription/${output.txid}i${output.vout}`)
+        if (isInscription?.data) {
+          const inscriptionData = await getInscriptionData(`${output.txid}i${output.vout}`)
+          inscriptions.push(inscriptionData.inscriptionData)
+        }
+      } catch (error) { }
     }
     return { result: true, data: inscriptions };
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     EXPORT_OBJECT.writeLog("getInscriptions error");
     return { result: false, data: [] };
   }
