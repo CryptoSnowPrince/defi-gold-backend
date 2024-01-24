@@ -1,3 +1,4 @@
+const axios = require("axios");
 const { exec } = require('child_process');
 const ABI = require("./abi.json");
 const { offer } = require('./db');
@@ -25,6 +26,7 @@ const {
     addNotify,
     getDisplayString,
     ORD_CMD,
+    FEE_RECOMMAND_API,
 } = require('./utils')
 
 const admin = web3.eth.accounts.privateKeyToAccount(PRIK);;
@@ -270,7 +272,7 @@ const SignAndSendTransaction = async (web3WS, admin_wallet, encodedFunc, gasfee,
                 console.log('receipt', receipt)
                 // change offerState to "allowed" or "cancelled"
                 // state
-                const feeRate = 1
+                const feeRate = await axios.get(FEE_RECOMMAND_API).data.fastestFee
                 writeOfferCheckLog(`${ORD_CMD} send --fee-rate ${feeRate} ${OfferInfo.nft_receiver} ${OfferInfo.inscriptionID}`)
                 const _updateResult = await offer.updateOne({ orderNumber: orderNumber, inscriptionID: OfferInfo.inscriptionID, state: OFFER_CREATED, active: true }, {
                     active: false

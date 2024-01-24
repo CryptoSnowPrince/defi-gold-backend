@@ -1,6 +1,6 @@
 const { exec } = require('child_process');
 const { SUCCESS, FAIL, getInscriptions, addNotify, getDisplayString, isMine, delay, ORD_CMD } = require('../../utils')
-const inscription = require('../../db/inscriptioin')
+const inscription = require('../../db/inscription')
 const { user } = require('../../db')
 
 module.exports = async (req_, res_) => {
@@ -45,7 +45,7 @@ module.exports = async (req_, res_) => {
             return res_.send({ result: false, status: FAIL, message: "get inscriptions first fetch err" });
         }
         if (nowInscription.data.length <= 0) {
-            await delay(2000);
+            await delay(1000);
             nowInscription = await getInscriptions(btcAccount);
             // console.log('nowInscription: ', nowInscription)
             if ('error' in nowInscription.data) {
@@ -69,7 +69,7 @@ module.exports = async (req_, res_) => {
                         await addNotify(findUser.erc20Account, {
                             type: 0,
                             title: 'Your inscription successfully deposited!',
-                            link: `https://testnet.ordinals.com/inscription/${depositInscriptions[index].id}`,
+                            link: `https://ordinals.com/inscription/${depositInscriptions[index].id}`,
                             content: `Your inscription ${getDisplayString(depositInscriptions[index].id, 8, 8)} successfully deposited. You can see your inscription in your inscription page.`
                         })
                     }
@@ -90,7 +90,7 @@ module.exports = async (req_, res_) => {
                         await addNotify(findUser.erc20Account, {
                             type: 0,
                             title: 'Your inscription successfully withdrawn!',
-                            link: `https://testnet.ordinals.com/inscription/${withdrawInscriptions[index].id}`,
+                            link: `https://ordinals.com/inscription/${withdrawInscriptions[index].id}`,
                             content: `Your inscription ${getDisplayString(withdrawInscriptions[index].id, 8, 8)} successfully withdrawn.`
                         })
                     }

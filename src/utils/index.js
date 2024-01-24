@@ -15,10 +15,12 @@ const CHAINID_GOERLI = 5;
 const EXPORT_OBJECT = {};
 
 // TODO
-// EXPORT_OBJECT.ORD_CMD = 'ord wallet --name milo' // Bitcoin Mainnet
-// EXPORT_OBJECT.FEE_RECOMMAND_API = "https://mempool.space/api/v1/fees/recommended"
-EXPORT_OBJECT.ORD_CMD = 'ord -t wallet --name milo' // Bitcoin Testnet
-EXPORT_OBJECT.FEE_RECOMMAND_API = "https://mempool.space/testnet/api/v1/fees/recommended"
+EXPORT_OBJECT.ORD_CMD = 'ord wallet --name milo' // Bitcoin Mainnet
+EXPORT_OBJECT.FEE_RECOMMAND_API = "https://mempool.space/api/v1/fees/recommended"
+EXPORT_OBJECT.UTXO_API = "https://mempool.space/api/address/"
+// EXPORT_OBJECT.ORD_CMD = 'ord -t wallet --name milo' // Bitcoin Testnet
+// EXPORT_OBJECT.FEE_RECOMMAND_API = "https://mempool.space/testnet/api/v1/fees/recommended"
+// EXPORT_OBJECT.UTXO_API = "https://mempool.space/testnet/api/address/"
 
 /********************************************************************************************/
 // Goerli Testnet
@@ -241,7 +243,7 @@ EXPORT_OBJECT.getRecoverAddress = (plainData, signData) => {
 EXPORT_OBJECT.isMine = async (inscriptionID, btcAccount) => {
   try {
     const response = await axios.get(
-      `https://ordapi.xyz/inscription/${inscriptionID}`
+      `https://ordapi.ordinalnovus.com/api/inscription/${inscriptionID}`
     );
     // console.log(response.data);
     if (response.data && response.data.address === btcAccount) {
@@ -254,10 +256,10 @@ EXPORT_OBJECT.isMine = async (inscriptionID, btcAccount) => {
   }
 };
 
-EXPORT_OBJECT.getInscriptionData = async (inscriptionID) => {
+const getInscriptionData = async (inscriptionID) => {
   try {
     const response = await axios.get(
-      `https://ordapi.xyz/inscription/${inscriptionID}`
+      `https://ordapi.ordinalnovus.com/api/inscription/${inscriptionID}`
     );
     // console.log(response.data);
     return { result: true, inscriptionData: response.data };
@@ -268,13 +270,24 @@ EXPORT_OBJECT.getInscriptionData = async (inscriptionID) => {
   }
 };
 
+EXPORT_OBJECT.getInscriptionData = getInscriptionData
+
 EXPORT_OBJECT.getInscriptions = async (btcAccount) => {
   try {
     const response = await axios.get(
-      `https://ordapi.xyz/address/${btcAccount}`
+      `${UTXO_API}/${btcAccount}/utxo`
     );
     // console.log(response.data);
-    return { result: true, data: response.data };
+    const inscriptions = []
+    for (let idx = 0; idx = response.data.length; idx++) {
+      const output = response.data[idx]
+      const isInscription = await axios.get(`https://ordinals.com/inscription/${output.txid}i${output.vout}`)
+      if (isInscription.data) {
+        const inscriptionData = await getInscriptionData(`${output.txid}i${output.vout}`)
+        inscriptions.push(inscriptionData.inscriptionData)
+      }
+    }
+    return { result: true, data: inscriptions };
   } catch (error) {
     // console.log(error);
     EXPORT_OBJECT.writeLog("getInscriptions error");
@@ -380,17 +393,22 @@ EXPORT_OBJECT.getDisplayString = (str, subLength1 = 8, subLength2 = 8) => {
     .substr(str.length - subLength2, str.length)}`;
 };
 
-EXPORT_OBJECT.timeEstimate = (feeRate) => {
-  // const feeRateValue = parseFloat(feeRate);
-  // if (feeRateValue < 8) {
-  //   return ">1 hour";
-  // } else if (feeRateValue < 10) {
-  //   return "~1 hour";
-  // } else if (feeRateValue >= 10) {
-  //   return "~15 minutes";
-  // }
-  // return "Can't Estimate";
-  return "~15 minutes";
+EXPORT_OBJECT.timeEstimate = (feeRate, feeData) => {
+  const feeRateValue = parseFloat(feeRate);
+  try {
+    if (feeRateValue < feeData?.minimumFee) {
+      return ">1 hour";
+    } else if (feeRateValue < feeData?.hourFee) {
+      return "~1 hour";
+    } else if (feeRateValue < feeData?.halfHourFee) {
+      return "~half hour";
+    } else if (feeRateValue >= feeData?.fastestFee) {
+      return "~15 minutes";
+    }
+    return "Can't Estimate";
+  } catch (error) {
+    return "Can't Estimate";
+  }
 };
 
 EXPORT_OBJECT.delay = (ms) => {

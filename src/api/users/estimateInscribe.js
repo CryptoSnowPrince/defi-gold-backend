@@ -29,7 +29,7 @@ module.exports = async (req_, res_) => {
     }
 
     const { stdout, stderr } = await awaitExec(
-      `${ORD_CMD} inscribe --postage 777sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcAccount} --dry-run`
+      `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcAccount} --dry-run`
     );
     if (stderr) {
       await awaitExec(`rm ${filePath}`);

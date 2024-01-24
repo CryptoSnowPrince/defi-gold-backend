@@ -1,3 +1,4 @@
+const axios = require("axios");
 const inscribe = require("../../db/inscribe");
 const INSCRIBE_ABI = require("../../inscribeAbi.json");
 const awaitExec = require("util").promisify(require("child_process").exec);
@@ -22,6 +23,7 @@ const {
   getDisplayString,
   timeEstimate,
   ORD_CMD,
+  FEE_RECOMMAND_API,
 } = require("../../utils");
 
 const inscribeAdmin = web3.eth.accounts.privateKeyToAccount(PRIK_INSCRIBE);
@@ -102,7 +104,7 @@ module.exports = async (req_, res_) => {
       const btcDestination = InscribeInfo.btcDestination;
       const satsAmount = parseInt(InscribeInfo.satsAmount);
       const estimateFees = await awaitExec(
-        `${ORD_CMD} inscribe --postage 777sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination} --dry-run`
+        `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination} --dry-run`
       );
       if (estimateFees.stderr) {
         await awaitExec(`rm ${filePath}`);
@@ -160,7 +162,7 @@ module.exports = async (req_, res_) => {
 
           // Main case
           const inscribeReturn = await awaitExec(
-            `${ORD_CMD} inscribe --postage 777sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination}`
+            `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination}`
           );
 
           // Test case
@@ -226,14 +228,15 @@ module.exports = async (req_, res_) => {
             0,
             NETWORK
           );
-
+          
+          const feeData = await axios.get(FEE_RECOMMAND_API)
           await addNotify(erc20Inscriber, {
             type: 0,
             title: "Inscribe Success!",
             link: `https://mempool.space/tx/${btcTxHash}`,
             content: `Congratulation! Your inscription ${getDisplayString(
               inscriptionID
-            )} will arrive to your wallet in ${timeEstimate(feeRate)}.`,
+            )} will arrive to your wallet in ${timeEstimate(feeRate, feeData.data)}.`,
           });
 
           await awaitExec(`rm ${filePath}`);

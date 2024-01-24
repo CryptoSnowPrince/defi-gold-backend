@@ -67,7 +67,8 @@ module.exports = async (req_, res_) => {
                 return res_.send({ result: false, status: FAIL, message: "NOT OWNER OF INSCRIPTION" });
             }
 
-            exec(`${ORD_CMD} send --fee-rate 1.0 ${receiver} ${inscriptionID}`, async (error, stdout, stderr) => {
+            const feeRate = await axios.get(FEE_RECOMMAND_API).data.fastestFee
+            exec(`${ORD_CMD} send --fee-rate ${feeRate} ${receiver} ${inscriptionID}`, async (error, stdout, stderr) => {
                 if (error) {
                     console.log(`exec error: ${error}`);
                     return res_.send({ result: error, status: FAIL, message: `${ORD_CMD} send err` });
