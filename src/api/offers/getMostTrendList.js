@@ -10,10 +10,10 @@ module.exports = async (req_, res_) => {
         // console.log("getMostTrendList: ");
 
         try {
-            const fetchItems = await offer.find({ inscriptionID: { $in: ["e164b024836bab73c0a9e6d2250c8746e276a7a02cdcf25487b2089be480dbdfi0"] } }); // TODO most trending conditions
+            const fetchItems = await offer.find({ inscriptionID: { $in: ["76cca14987619198ff82e3b543d63f9a19a48c80477c97a94b24e7561a559757i0"] } }); // TODO most trending conditions
             // console.log("getMostTrendList fetchItems: ", fetchItems)
             if (!fetchItems || fetchItems.length <= 0 || true) {
-                const inscriptionsVal = await inscription.findOne({ btcAccount: "bc1phxht4kwgzja4nke5zhrg3aal7xwkkh44qxwax97vtyl36d7zwn5qrdr864" })
+                const inscriptionsVal = await inscription.findOne({ btcAccount: "tb1pc4mv8wkg5mx3ddruy5exzej6suwjull0q92zy0e008r0sqv0l83sfs6jzm" })
                 // console.log("inscriptionsVal: ", inscriptionsVal)
                 if (!inscriptionsVal) {
                     return res_.send({ result: false, status: FAIL, message: "getMostTrendList err" });

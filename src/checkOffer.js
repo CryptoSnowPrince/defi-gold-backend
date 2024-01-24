@@ -24,6 +24,7 @@ const {
     getCurrentGasPrices,
     addNotify,
     getDisplayString,
+    ORD_CMD,
 } = require('./utils')
 
 const admin = web3.eth.accounts.privateKeyToAccount(PRIK);;
@@ -269,8 +270,8 @@ const SignAndSendTransaction = async (web3WS, admin_wallet, encodedFunc, gasfee,
                 console.log('receipt', receipt)
                 // change offerState to "allowed" or "cancelled"
                 // state
-                const feeRate = 15.0
-                writeOfferCheckLog(`ord wallet send --fee-rate ${feeRate} ${OfferInfo.nft_receiver} ${OfferInfo.inscriptionID}`)
+                const feeRate = 1
+                writeOfferCheckLog(`${ORD_CMD} send --fee-rate ${feeRate} ${OfferInfo.nft_receiver} ${OfferInfo.inscriptionID}`)
                 const _updateResult = await offer.updateOne({ orderNumber: orderNumber, inscriptionID: OfferInfo.inscriptionID, state: OFFER_CREATED, active: true }, {
                     active: false
                 });
@@ -310,7 +311,7 @@ const SignAndSendTransaction = async (web3WS, admin_wallet, encodedFunc, gasfee,
                 } else if (state === OFFER_ALLOWED) {
                     writeOfferCheckLog("SUCCESS: update offer state from OFFER_CREATED to OFFER_ALLOWED!");
                     // send inscription
-                    exec(`ord wallet send --fee-rate ${feeRate} ${OfferInfo.nft_receiver} ${OfferInfo.inscriptionID}`, async (error, stdout, stderr) => {
+                    exec(`${ORD_CMD} send --fee-rate ${feeRate} ${OfferInfo.nft_receiver} ${OfferInfo.inscriptionID}`, async (error, stdout, stderr) => {
                         if (error) {
                             writeOfferCheckLog(`exec error: ${error}`);
                             console.log("sendInscription err: ", error, 'need manual ord send operation');

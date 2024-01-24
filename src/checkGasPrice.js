@@ -3,7 +3,8 @@ const {
     CHAINID_ETH,
     CHAINID_BSC,
     CHAINID_GOERLI,
-    getCurrentGasPrices
+    getCurrentGasPrices,
+    ORD_CMD
 } = require('./utils')
 const awaitExec = require('util').promisify(require('child_process').exec);
 
@@ -20,9 +21,9 @@ const fetchGasPrice = async () => {
         counter++;
         console.log(`===========fetchGasPrice counter===========${counter}`);
         // sync ord
-        const { stdout, stderr } = await awaitExec(`ord wallet balance`)
-        console.log('ord wallet balance stdout: ', stdout)
-        console.log('ord wallet balance stderr: ', stderr)
+        const { stdout, stderr } = await awaitExec(`${ORD_CMD} balance`)
+        console.log(`${ORD_CMD} balance stdout: `, stdout)
+        console.log(`${ORD_CMD} balance stderr: `, stderr)
         await updateCurrentGasPrices(CHAINID_ETH);
         await updateCurrentGasPrices(CHAINID_GOERLI);
         await updateCurrentGasPrices(CHAINID_BSC);

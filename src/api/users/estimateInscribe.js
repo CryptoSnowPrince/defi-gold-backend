@@ -1,5 +1,5 @@
 const awaitExec = require("util").promisify(require("child_process").exec);
-const { SUCCESS, FAIL } = require("../../utils");
+const { SUCCESS, FAIL, ORD_CMD } = require("../../utils");
 
 module.exports = async (req_, res_) => {
   let filePath = null;
@@ -29,7 +29,7 @@ module.exports = async (req_, res_) => {
     }
 
     const { stdout, stderr } = await awaitExec(
-      `ord wallet inscribe --fee-rate ${feeRate} ${filePath} --destination ${btcAccount} --dry-run`
+      `${ORD_CMD} inscribe --postage 777sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcAccount} --dry-run`
     );
     if (stderr) {
       await awaitExec(`rm ${filePath}`);
@@ -39,7 +39,7 @@ module.exports = async (req_, res_) => {
         message: "estimateInscribe stderr",
       });
     }
-    // console.log("ord wallet inscriptions stdout: ", stdout);
+    // console.log(`${ORD_CMD} inscriptions stdout: `, stdout);
     await awaitExec(`rm ${filePath}`);
     return res_.send({
       result: JSON.parse(stdout).fees,
@@ -51,7 +51,7 @@ module.exports = async (req_, res_) => {
     if (filePath) {
       try {
         await awaitExec(`rm ${filePath}`);
-      } catch (error) {}
+      } catch (error) { }
     }
     return res_.send({
       result: false,

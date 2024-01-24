@@ -3,16 +3,16 @@
 ### API_URL
 
 ```
-https://ordinalbtc.app/api
+https://milo.metabest.tech/api
 ```
 ### API_LIST
 ```
 POST
-https://ordinalbtc.app/api/users/getUserInfo
+https://milo.metabest.tech/api/users/getUserInfo
 erc20Account: string
 
 POST
-https://ordinalbtc.app/api/users/setUserInfo
+https://milo.metabest.tech/api/users/setUserInfo
 erc20Account: string
 name: string
 avatar: number
@@ -21,18 +21,18 @@ actionDate: date
 signData: object
 
 POST
-https://ordinalbtc.app/api/users/getUserInscriptions
+https://milo.metabest.tech/api/users/getUserInscriptions
 btcAccount: string
 
 POST
-https://ordinalbtc.app/api/users/withdrawInscription
+https://milo.metabest.tech/api/users/withdrawInscription
 erc20Account: string
 inscriptionID: string
 receiver: string
 signData: object
 
 POST
-https://ordinalbtc.app/api/users/listInscription
+https://milo.metabest.tech/api/users/listInscription
 inscriptionID: string
 name: string
 category: number
@@ -45,14 +45,14 @@ actionDate: date
 signData: object
 
 POST
-https://ordinalbtc.app/api/users/unListInscription
+https://milo.metabest.tech/api/users/unListInscription
 inscriptionID: string
 btcSeller: string
 actionDate: date
 signData: object
 
 POST
-https://ordinalbtc.app/api/offers/getList
+https://milo.metabest.tech/api/offers/getList
 categories: [Number]
 tokenAddresses: [String]
 btcSellers: [String]
@@ -66,27 +66,27 @@ sortBy: Number
 active: boolean
 
 GET
-https://ordinalbtc.app/api/inscriptions/detail?inscriptionID=${inscriptionID}
+https://milo.metabest.tech/api/inscriptions/detail?inscriptionID=${inscriptionID}
 inscriptionID: String
 
 GET
-https://ordinalbtc.app/api/inscriptions/withdrawDetail?orderNumber=${orderNumber}
+https://milo.metabest.tech/api/inscriptions/withdrawDetail?orderNumber=${orderNumber}
 orderNumber: Number
 
 GET
-https://ordinalbtc.app/api/offers/getMostTrendList
+https://milo.metabest.tech/api/offers/getMostTrendList
 
 GET
-https://ordinalbtc.app/api/utils/getGasPrice?chainID=Number
+https://milo.metabest.tech/api/utils/getGasPrice?chainID=Number
 const CHAINID_ETH = 1
 const CHAINID_BSC = 56
 const CHAINID_GOERLI = 5
 
 GET
-https://ordinalbtc.app/api/users/getNotify?erc20Account=erc20Account
+https://milo.metabest.tech/api/users/getNotify?erc20Account=erc20Account
 
 POST
-https://ordinalbtc.app/api/users/removeNotify
+https://milo.metabest.tech/api/users/removeNotify
 erc20Account: erc20Account
 removeAll: bool
 type: Number

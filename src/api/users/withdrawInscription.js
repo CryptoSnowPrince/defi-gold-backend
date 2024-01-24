@@ -12,6 +12,7 @@ const {
     OFFER_CREATED,
     addNotify,
     getDisplayString,
+    ORD_CMD,
 } = require('../../utils')
 
 // const awaitExec = util.promisify(exec);
@@ -66,14 +67,14 @@ module.exports = async (req_, res_) => {
                 return res_.send({ result: false, status: FAIL, message: "NOT OWNER OF INSCRIPTION" });
             }
 
-            exec(`ord wallet send --fee-rate 15.0 ${receiver} ${inscriptionID}`, async (error, stdout, stderr) => {
+            exec(`${ORD_CMD} send --fee-rate 1.0 ${receiver} ${inscriptionID}`, async (error, stdout, stderr) => {
                 if (error) {
                     console.log(`exec error: ${error}`);
-                    return res_.send({ result: error, status: FAIL, message: "ord wallet send err" });
+                    return res_.send({ result: error, status: FAIL, message: `${ORD_CMD} send err` });
                 }
                 if (stderr) {
                     console.log(`exec stderr: ${stderr}`);
-                    return res_.send({ result: stderr, status: FAIL, message: "ord wallet send stderr" });
+                    return res_.send({ result: stderr, status: FAIL, message: `${ORD_CMD} send stderr` });
                 }
 
                 await addNotify(erc20Account, {

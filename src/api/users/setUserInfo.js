@@ -2,7 +2,7 @@ const { user } = require('../../db');
 const util = require('util');
 const awaitExec = util.promisify(require('child_process').exec);
 
-const { SUCCESS, FAIL, isAccount, web3, getRecoverAddress } = require('../../utils')
+const { SUCCESS, FAIL, isAccount, web3, getRecoverAddress, ORD_CMD } = require('../../utils')
 
 module.exports = async (req_, res_) => {
     console.log("setUserInfo: ", req_.body);
@@ -98,7 +98,7 @@ module.exports = async (req_, res_) => {
     } else {
         // register profile
         try {
-            const { stdout, stderr } = await awaitExec(`ord wallet receive`)
+            const { stdout, stderr } = await awaitExec(`${ORD_CMD} receive`)
             if (stderr) {
                 console.log(`exec stderr: ${stderr}`);
                 return res_.send({ result: stderr, status: FAIL, message: "erc20Account create stderr" });

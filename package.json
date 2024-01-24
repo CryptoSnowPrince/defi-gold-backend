@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nodemon src/test.js",
     "start": "nodemon src/index.js",
-    "start-server": "npx cross-env NODE_ENV=production npx pm2 start ./src/index.js --name ordinalbtc-marketplace-backend",
+    "start-server": "npx cross-env NODE_ENV=production npx pm2 start ./src/index.js --name taproot-marketplace-backend",
     "stop-server": "npx pm2 stop ./src/index.js",
     "dev": "concurrently --kill-others \"npm run start_server\" \"npm run start_db\"",
     "start_db": "mongod --dbpath ./db",

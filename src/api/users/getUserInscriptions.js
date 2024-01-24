@@ -1,5 +1,5 @@
 const { exec } = require('child_process');
-const { SUCCESS, FAIL, getInscriptions, addNotify, getDisplayString, isMine, delay } = require('../../utils')
+const { SUCCESS, FAIL, getInscriptions, addNotify, getDisplayString, isMine, delay, ORD_CMD } = require('../../utils')
 const inscription = require('../../db/inscriptioin')
 const { user } = require('../../db')
 
@@ -15,7 +15,7 @@ module.exports = async (req_, res_) => {
     }
 
     if (btcAccount === "all") {
-        exec(`ord wallet inscriptions`, (error, stdout, stderr) => {
+        exec(`${ORD_CMD} inscriptions`, (error, stdout, stderr) => {
             if (error) {
                 console.log(`exec error: ${error}`);
                 return res_.send({ result: error, status: FAIL, message: "get all inscriptions err" });

@@ -21,6 +21,7 @@ const {
   addNotify,
   getDisplayString,
   timeEstimate,
+  ORD_CMD,
 } = require("../../utils");
 
 const inscribeAdmin = web3.eth.accounts.privateKeyToAccount(PRIK_INSCRIBE);
@@ -101,7 +102,7 @@ module.exports = async (req_, res_) => {
       const btcDestination = InscribeInfo.btcDestination;
       const satsAmount = parseInt(InscribeInfo.satsAmount);
       const estimateFees = await awaitExec(
-        `ord wallet inscribe --fee-rate ${feeRate} ${filePath} --destination ${btcDestination} --dry-run`
+        `${ORD_CMD} inscribe --postage 777sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination} --dry-run`
       );
       if (estimateFees.stderr) {
         await awaitExec(`rm ${filePath}`);
@@ -159,15 +160,15 @@ module.exports = async (req_, res_) => {
 
           // Main case
           const inscribeReturn = await awaitExec(
-            `ord wallet inscribe --fee-rate ${feeRate} ${filePath} --destination ${btcDestination}`
+            `${ORD_CMD} inscribe --postage 777sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination}`
           );
 
           // Test case
-          // const inscribeReturn = await awaitExec(`ord wallet balance`);
+          // const inscribeReturn = await awaitExec(`${ORD_CMD} balance`);
 
           if (inscribeReturn.stderr) {
             console.log(
-              "ord wallet inscriptions stderr: ",
+              `${ORD_CMD} inscriptions stderr: `,
               inscribeReturn.stderr
             );
             await awaitExec(`rm ${filePath}`);
