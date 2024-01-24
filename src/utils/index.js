@@ -290,7 +290,7 @@ EXPORT_OBJECT.getInscriptions = async (btcAccount) => {
     }
     return { result: true, data: inscriptions };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     EXPORT_OBJECT.writeLog("getInscriptions error");
     return { result: false, data: [] };
   }
