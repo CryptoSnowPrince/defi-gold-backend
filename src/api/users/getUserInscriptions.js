@@ -69,7 +69,7 @@ module.exports = async (req_, res_) => {
                         await addNotify(findUser.erc20Account, {
                             type: 0,
                             title: 'Your inscription successfully deposited!',
-                            link: `https://ordinals.com/inscription/${depositInscriptions[index].id}`,
+                            link: `https://testnet.ordinals.com/inscription/${depositInscriptions[index].id}`,
                             content: `Your inscription ${getDisplayString(depositInscriptions[index].id, 8, 8)} successfully deposited. You can see your inscription in your inscription page.`
                         })
                     }
@@ -90,7 +90,7 @@ module.exports = async (req_, res_) => {
                         await addNotify(findUser.erc20Account, {
                             type: 0,
                             title: 'Your inscription successfully withdrawn!',
-                            link: `https://ordinals.com/inscription/${withdrawInscriptions[index].id}`,
+                            link: `https://testnet.ordinals.com/inscription/${withdrawInscriptions[index].id}`,
                             content: `Your inscription ${getDisplayString(withdrawInscriptions[index].id, 8, 8)} successfully withdrawn.`
                         })
                     }
