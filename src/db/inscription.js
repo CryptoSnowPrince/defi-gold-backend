@@ -11,7 +11,7 @@ const inscriptionSchema = new mongoose.Schema(
                 genesis_fee:  { type: String, default: "" },
                 genesis_height:  { type: String, default: "" },
                 genesis_transaction:  { type: String, default: "" },
-                id:  { type: String, default: "" },
+                inscription_id:  { type: String, default: "" },
                 inscription_number: { type: Number, default: -1 },
                 location:  { type: String, default: "" },
                 offset:  { type: String, default: "" },

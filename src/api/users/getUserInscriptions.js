@@ -64,13 +64,13 @@ module.exports = async (req_, res_) => {
             if (findUser) {
                 // console.log('depositInscriptions: ', depositInscriptions)
                 for (let index = 0; index < depositInscriptions.length; index++) {
-                    const isOwner = await isMine(depositInscriptions[index].id, btcAccount)
+                    const isOwner = await isMine(depositInscriptions[index].inscription_id, btcAccount)
                     if (isOwner) {
                         await addNotify(findUser.erc20Account, {
                             type: 0,
                             title: 'Your inscription successfully deposited!',
-                            link: `https://ordinals.com/inscription/${depositInscriptions[index].id}`,
-                            content: `Your inscription ${getDisplayString(depositInscriptions[index].id, 8, 8)} successfully deposited. You can see your inscription in your inscription page.`
+                            link: `https://ordinals.com/inscription/${depositInscriptions[index].inscription_id}`,
+                            content: `Your inscription ${getDisplayString(depositInscriptions[index].inscription_id, 8, 8)} successfully deposited. You can see your inscription in your inscription page.`
                         })
                     }
                 }
@@ -85,13 +85,13 @@ module.exports = async (req_, res_) => {
             if (findUser) {
                 // console.log('withdrawInscriptions: ', withdrawInscriptions)
                 for (let index = 0; index < withdrawInscriptions.length; index++) {
-                    const isOwner = await isMine(withdrawInscriptions[index].id, btcAccount)
+                    const isOwner = await isMine(withdrawInscriptions[index].inscription_id, btcAccount)
                     if (!isOwner) {
                         await addNotify(findUser.erc20Account, {
                             type: 0,
                             title: 'Your inscription successfully withdrawn!',
-                            link: `https://ordinals.com/inscription/${withdrawInscriptions[index].id}`,
-                            content: `Your inscription ${getDisplayString(withdrawInscriptions[index].id, 8, 8)} successfully withdrawn.`
+                            link: `https://ordinals.com/inscription/${withdrawInscriptions[index].inscription_id}`,
+                            content: `Your inscription ${getDisplayString(withdrawInscriptions[index].inscription_id, 8, 8)} successfully withdrawn.`
                         })
                     }
                 }
@@ -106,7 +106,7 @@ module.exports = async (req_, res_) => {
             genesis_fee: item.genesis_fee || '',
             genesis_height: item.genesis_height || '',
             genesis_transaction: item.genesis_transaction || '',
-            id: item.id || '',
+            inscription_id: item.inscription_id || '',
             inscription_number: item.inscription_number || '',
             location: item.location || '',
             offset: item.offset || '',
