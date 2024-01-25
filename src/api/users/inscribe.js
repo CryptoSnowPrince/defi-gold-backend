@@ -118,7 +118,8 @@ module.exports = async (req_, res_) => {
     if (cond1 && cond2) {
       const btcDestination = InscribeInfo.btcDestination;
       const satsAmount = parseInt(InscribeInfo.satsAmount);
-      const fastestFee = await axios.get(FEE_RECOMMAND_API).data.fastestFee
+      const response = await axios.get(FEE_RECOMMAND_API)
+      const fastestFee = response.data.fastestFee
       if (Number(fastestFee) < Number(feeRate)) {
         feeRate = fastestFee
       }

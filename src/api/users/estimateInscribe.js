@@ -1,6 +1,6 @@
 const awaitExec = require("util").promisify(require("child_process").exec);
 const axios = require("axios");
-const { SUCCESS, FAIL, ORD_CMD } = require("../../utils");
+const { SUCCESS, FAIL, ORD_CMD, FEE_RECOMMAND_API } = require("../../utils");
 
 module.exports = async (req_, res_) => {
   let filePath = null;
@@ -29,7 +29,8 @@ module.exports = async (req_, res_) => {
       });
     }
 
-    const fastestFee = await axios.get(FEE_RECOMMAND_API).data.fastestFee
+    const response = await axios.get(FEE_RECOMMAND_API)
+    const fastestFee = response.data.fastestFee
     if (Number(fastestFee) < Number(feeRate)) {
       feeRate = fastestFee
     }
