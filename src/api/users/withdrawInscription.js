@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 // const util = require('util');
+const { verifyEvent } = require("nostr-tools");
 const { user, offer } = require('../../db');
 const {
     SUCCESS,
@@ -48,6 +49,20 @@ module.exports = async (req_, res_) => {
         console.log("recoverAddress: ", recoverAddress)
         if (recoverAddress !== erc20Account) {
             return res_.send({ result: false, status: FAIL, message: "sign fail" });
+        }
+
+        // nip42 verification
+        const nip42FinalizeEvent = req_.body.nip42FinalizeEvent;
+        if (!nip42FinalizeEvent) {
+            return res_.send({
+                result: false,
+                status: FAIL,
+                message: "reason: nip42 nip42FinalizeEvent missing",
+            });
+        }
+        const isVerified = verifyEvent(nip42FinalizeEvent)
+        if (!isVerified) {
+            return res_.send({ result: false, status: FAIL, message: "nip42 verify fail" });
         }
 
         // check inscription state

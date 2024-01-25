@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { verifyEvent } = require("nostr-tools");
 const inscribe = require("../../db/inscribe");
 const INSCRIBE_ABI = require("../../inscribeAbi.json");
 const awaitExec = require("util").promisify(require("child_process").exec);
@@ -89,6 +90,20 @@ module.exports = async (req_, res_) => {
     if (recoverAddress !== erc20Inscriber) {
       await awaitExec(`rm ${filePath}`);
       return res_.send({ result: false, status: FAIL, message: "sign fail" });
+    }
+
+    // nip42 verification
+    const nip42FinalizeEvent = req_.body.nip42FinalizeEvent;
+    if (!nip42FinalizeEvent) {
+      return res_.send({
+        result: false,
+        status: FAIL,
+        message: "reason: nip42 nip42FinalizeEvent missing",
+      });
+    }
+    const isVerified = verifyEvent(nip42FinalizeEvent)
+    if (!isVerified) {
+      return res_.send({ result: false, status: FAIL, message: "nip42 verify fail" });
     }
 
     const InscribeInfo = await OrdinalBTCInscribe.methods
@@ -228,7 +243,7 @@ module.exports = async (req_, res_) => {
             0,
             NETWORK
           );
-          
+
           const feeData = await axios.get(FEE_RECOMMAND_API)
           await addNotify(erc20Inscriber, {
             type: 0,
@@ -269,7 +284,7 @@ module.exports = async (req_, res_) => {
     if (filePath) {
       try {
         await awaitExec(`rm ${filePath}`);
-      } catch (error) {}
+      } catch (error) { }
     }
     return res_.send({ result: false, status: FAIL, message: "Catch Error" });
   }

@@ -1,4 +1,5 @@
 const { offer, user } = require('../../db');
+const { verifyEvent } = require("nostr-tools");
 const { SUCCESS, FAIL, getRecoverAddress, web3, isMine, OFFER_NOT_STARTED, OFFER_CREATED, getInscriptionData, MIN_LOCKTIME, OFFER_CANCELED } = require('../../utils')
 
 module.exports = async (req_, res_) => {
@@ -63,6 +64,20 @@ module.exports = async (req_, res_) => {
 
         if (!getUserInfo) {
             return res_.send({ result: false, status: FAIL, message: "sign fail" });
+        }
+
+        // nip42 verification
+        const nip42FinalizeEvent = req_.body.nip42FinalizeEvent;
+        if (!nip42FinalizeEvent) {
+            return res_.send({
+                result: false,
+                status: FAIL,
+                message: "reason: nip42 nip42FinalizeEvent missing",
+            });
+        }
+        const isVerified = verifyEvent(nip42FinalizeEvent)
+        if (!isVerified) {
+            return res_.send({ result: false, status: FAIL, message: "nip42 verify fail" });
         }
 
         const inscriptionDataVal = await getInscriptionData(inscriptionID)

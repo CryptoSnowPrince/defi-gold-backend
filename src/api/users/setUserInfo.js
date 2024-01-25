@@ -1,4 +1,5 @@
 const { user } = require('../../db');
+const { verifyEvent } = require("nostr-tools");
 const util = require('util');
 const awaitExec = util.promisify(require('child_process').exec);
 
@@ -62,6 +63,20 @@ module.exports = async (req_, res_) => {
     console.log("recoverAddress: ", recoverAddress)
     if (recoverAddress !== erc20Account) {
         return res_.send({ result: false, status: FAIL, message: "sign fail" });
+    }
+
+    // nip42 verification
+    const nip42FinalizeEvent = req_.body.nip42FinalizeEvent;
+    if (!nip42FinalizeEvent) {
+        return res_.send({
+            result: false,
+            status: FAIL,
+            message: "reason: nip42 nip42FinalizeEvent missing",
+        });
+    }
+    const isVerified = verifyEvent(nip42FinalizeEvent)
+    if (!isVerified) {
+        return res_.send({ result: false, status: FAIL, message: "nip42 verify fail" });
     }
 
     const fetchItem = await user.findOne({ erc20Account: erc20Account });
