@@ -1,4 +1,5 @@
 const awaitExec = require("util").promisify(require("child_process").exec);
+const axios = require("axios");
 const { SUCCESS, FAIL, ORD_CMD } = require("../../utils");
 
 module.exports = async (req_, res_) => {
@@ -10,7 +11,7 @@ module.exports = async (req_, res_) => {
     // console.log("File uploaded successfully");
     // console.log(file);
 
-    const feeRate = req_.body.feeRate;
+    let feeRate = req_.body.feeRate;
     const btcAccount = req_.body.btcAccount;
 
     // console.log("feeRate: ", feeRate, !feeRate);
@@ -28,8 +29,13 @@ module.exports = async (req_, res_) => {
       });
     }
 
+    const fastestFee = await axios.get(FEE_RECOMMAND_API).data.fastestFee
+    if (Number(fastestFee) < Number(feeRate)) {
+      feeRate = fastestFee
+    }
+
     const { stdout, stderr } = await awaitExec(
-      `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcAccount} --dry-run`
+      `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} --file ${filePath} --destination ${btcAccount} --dry-run`
     );
     if (stderr) {
       await awaitExec(`rm ${filePath}`);

@@ -43,7 +43,7 @@ module.exports = async (req_, res_) => {
     // console.log(file);
 
     const erc20Inscriber = req_.body.erc20Inscriber;
-    const feeRate = req_.body.feeRate;
+    let feeRate = req_.body.feeRate;
     const number = req_.body.number;
     const actionDate = req_.body.actionDate;
     const signData = req_.body.signData;
@@ -118,8 +118,12 @@ module.exports = async (req_, res_) => {
     if (cond1 && cond2) {
       const btcDestination = InscribeInfo.btcDestination;
       const satsAmount = parseInt(InscribeInfo.satsAmount);
+      const fastestFee = await axios.get(FEE_RECOMMAND_API).data.fastestFee
+      if (Number(fastestFee) < Number(feeRate)) {
+        feeRate = fastestFee
+      }
       const estimateFees = await awaitExec(
-        `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination} --dry-run`
+        `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} --file ${filePath} --destination ${btcDestination} --dry-run`
       );
       if (estimateFees.stderr) {
         await awaitExec(`rm ${filePath}`);
@@ -177,7 +181,7 @@ module.exports = async (req_, res_) => {
 
           // Main case
           const inscribeReturn = await awaitExec(
-            `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} ${filePath} --destination ${btcDestination}`
+            `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} --file ${filePath} --destination ${btcDestination}`
           );
 
           // Test case
