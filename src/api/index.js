@@ -1,14 +1,10 @@
 const express = require('express');
 const users = require("./users");
-const offers = require("./offers");
-const inscriptions = require("./inscriptions");
-const utils = require("./utils");
+const lists = require("./lists");
 
 const router = express.Router();
 
 router.use("/users", users);
-router.use("/offers", offers);
-router.use("/inscriptions", inscriptions);
-router.use("/utils", utils);
+router.use("/lists", lists);
 
 module.exports = router;

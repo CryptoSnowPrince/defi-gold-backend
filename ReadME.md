@@ -1,5 +1,11 @@
 # taproot-marketplace-backend
 
+## ENV
+
+Node: 18.18.2
+Yarn: 1.22.21
+Npm: 9.8.1
+
 ### API_URL
 
 ```

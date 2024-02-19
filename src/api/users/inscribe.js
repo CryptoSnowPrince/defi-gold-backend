@@ -1,7 +1,5 @@
 const axios = require("axios");
 const { verifyEvent } = require("nostr-tools");
-const inscribe = require("../../db/inscribe");
-const INSCRIBE_ABI = require("../../inscribeAbi.json");
 const awaitExec = require("util").promisify(require("child_process").exec);
 const {
   SUCCESS,
@@ -27,11 +25,6 @@ const {
   FEE_RECOMMAND_API,
 } = require("../../utils");
 
-const inscribeAdmin = web3.eth.accounts.privateKeyToAccount(PRIK_INSCRIBE);
-const OrdinalBTCInscribe = new web3.eth.Contract(
-  INSCRIBE_ABI,
-  ISNCRIBE_ADDRESS
-);
 
 module.exports = async (req_, res_) => {
   let filePath = null;

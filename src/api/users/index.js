@@ -14,46 +14,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const getUserInfo = require("./getUserInfo");
-const setUserInfo = require("./setUserInfo");
-
-const getUserInscriptions = require("./getUserInscriptions");
-const withdrawInscription = require("./withdrawInscription");
-
-const listInscription = require("./listInscription");
-const unListInscription = require("./unListInscription");
-
-const getNotify = require('./getNotify')
-const removeNotify = require('./removeNotify')
+const listitem = require("./listitem");
+const delistitem = require("./delistitem");
+const buyitem = require("./buyitem");
 
 const inscribe = require('./inscribe')
 const estimateInscribe = require('./estimateInscribe')
 
-// getUserInfo
-router.post('/getUserInfo', getUserInfo);
-
-// setUserInfo
-router.post('/setUserInfo', setUserInfo);
-
-// getUserInscriptions
-router.post('/getUserInscriptions', getUserInscriptions);
-
-// withdrawInscription
-router.post('/withdrawInscription', withdrawInscription);
-
-// listInscription
-router.post('/listInscription', listInscription);
-
-// unListInscription
-router.post('/unListInscription', unListInscription);
-
-// getNotify
-router.get('/getNotify', getNotify);
-router.post('/removeNotify', removeNotify);
-
+// listitem
+router.post('/listitem', listitem);
+// delistitem
+router.post('/delistitem', delistitem);
+// buyitem
+router.post('/buyitem', buyitem);
 // inscribe
 router.post('/inscribe', upload.single('file'), inscribe);
-
 // estimateInscribe
 router.post('/estimateInscribe', upload.single('file'), estimateInscribe);
 
