@@ -10,11 +10,11 @@ const EXPORT_OBJECT = {};
 const UNISAT_API_KEY_0 = '6231ea23b9fbb7a17dd49df9d88ba6686cbbd639a73160cf358bf2e1fdc07b1a' // cryptosnowprince
 
 const NETWORK = 'testnet'
-const MEMPOOL_API = `https://mempool.space${NETWORK === 'testnet' ? '/testnet' : ''}`
+const MEMPOOL_URL = `https://mempool.space${NETWORK === 'testnet' ? '/testnet' : ''}`
 const UNISAT_API = `https://open-api${NETWORK === 'testnet' ? '-testnet' : ''}.unisat.io`
 const ORD_CMD = `ord ${NETWORK === 'testnet' ? '-t' : ''} wallet`
 
-EXPORT_OBJECT.MEMPOOL_API = MEMPOOL_API
+EXPORT_OBJECT.MEMPOOL_URL = MEMPOOL_URL
 EXPORT_OBJECT.UNISAT_API = UNISAT_API
 EXPORT_OBJECTORD_CMD = ORD_CMD
 
