@@ -17,13 +17,7 @@ module.exports = async (req_, res_) => {
         // console.log("sellOut: ", sellOut, !sellOut);
         // console.log("psbt: ", psbt, !psbt);
 
-        if (
-            !inscriptionId ||
-            !price ||
-            !sellIn ||
-            !sellOut ||
-            !psbt
-        ) {
+        if (!inscriptionId) {
             return res_.send({ result: false, status: FAIL, message: "fail" });
         }
 
