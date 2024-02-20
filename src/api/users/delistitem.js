@@ -1,5 +1,5 @@
 const List = require('../../models/list');
-const { SUCCESS, FAIL } = require('../../utils')
+const { SUCCESS, FAIL, getInscriptionInfo } = require('../../utils')
 
 module.exports = async (req_, res_) => {
     try {
@@ -35,7 +35,7 @@ module.exports = async (req_, res_) => {
         }
         const fetchItem = await List.findOne({ inscriptionId });
 
-        console.log("fetchItem: ", fetchItem);
+        // console.log("fetchItem: ", fetchItem);
         if (!fetchItem) {
             return res_.send({ result: true, status: SUCCESS, message: "ok" });
         } else {
