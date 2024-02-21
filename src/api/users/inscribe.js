@@ -11,6 +11,7 @@ const {
   INSCRIBE_COMPLETED,
   INSCRIBE_CREATED,
   MEMPOOL_URL,
+  delay,
 } = require("../../utils");
 const Inscribe = require("../../models/inscribe");
 
@@ -31,7 +32,7 @@ module.exports = async (req_, res_) => {
     const satoshi = Number(req_.body.satoshi);
 
     // console.log("ordinal: ", ordinal, !ordinal);
-    // console.log("deposit: ", deposit, !deposit);
+    console.log("deposit: ", deposit, !deposit);
     // console.log("feeRate: ", feeRate, !feeRate);
     // console.log("depositTx: ", depositTx, !depositTx);
     // console.log("order: ", order, !order);
@@ -64,6 +65,7 @@ module.exports = async (req_, res_) => {
     }
 
     // balance check
+    await delay(1000)
     const options = {
       method: 'GET',
       url: `${MEMPOOL_URL}/api/address/${deposit}`,
