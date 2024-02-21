@@ -1,6 +1,9 @@
 const awaitExec = require("util").promisify(require("child_process").exec);
 const axios = require("axios");
-const { SUCCESS, FAIL, ORD_CMD, FEE_RECOMMAND_API } = require("../../utils");
+const { SUCCESS, FAIL, ORD_CMD, MEMPOOL_URL, OUTPUT_UTXO, SERVICE_FEE } = require("../../utils");
+const Inscribe = require("../../models/inscribe");
+
+let pending = 0
 
 module.exports = async (req_, res_) => {
   let filePath = null;
@@ -11,13 +14,14 @@ module.exports = async (req_, res_) => {
     // console.log("File uploaded successfully");
     // console.log(file);
 
-    let feeRate = req_.body.feeRate;
-    const btcAccount = req_.body.btcAccount;
+    let feeRate = Number(req_.body.feeRate);
+    const ordinal = String(req_.body.ordinal);
 
+    console.log("filePath: ", filePath, !filePath);
     // console.log("feeRate: ", feeRate, !feeRate);
-    // console.log("btcAccount: ", btcAccount, !btcAccount);
+    // console.log("ordinal: ", ordinal, !ordinal);
 
-    if (!feeRate || !btcAccount) {
+    if (!feeRate || !ordinal) {
       console.log("request params fail");
       if (filePath) {
         await awaitExec(`rm ${filePath}`);
@@ -29,14 +33,21 @@ module.exports = async (req_, res_) => {
       });
     }
 
-    const response = await axios.get(FEE_RECOMMAND_API)
+    const options = {
+      method: 'GET',
+      url: `${MEMPOOL_URL}/api/v1/fees/recommended`,
+      headers: {
+        Accept: '*/*',
+      }
+    };
+    const response = await axios.request(options)
     const fastestFee = response.data.fastestFee
-    if (Number(fastestFee) < Number(feeRate)) {
+    if (fastestFee < feeRate) {
       feeRate = fastestFee
     }
 
     const { stdout, stderr } = await awaitExec(
-      `${ORD_CMD} inscribe --postage 546sats --compress --fee-rate ${feeRate} --file ${filePath} --destination ${btcAccount} --dry-run`
+      `${ORD_CMD} inscribe --postage ${OUTPUT_UTXO}sats --compress --fee-rate ${feeRate} --file ${filePath} --destination ${ordinal} --dry-run`
     );
     if (stderr) {
       await awaitExec(`rm ${filePath}`);
@@ -47,9 +58,61 @@ module.exports = async (req_, res_) => {
       });
     }
     // console.log(`${ORD_CMD} inscriptions stdout: `, stdout);
+    const satoshi = JSON.parse(stdout).total_fees
+
+    const { stdout: out, stderr: err } = await awaitExec(
+      `${ORD_CMD} receive`
+    );
+    if (err) {
+      await awaitExec(`rm ${filePath}`);
+      return res_.send({
+        result: false,
+        status: FAIL,
+        message: "estimateInscribe stderr",
+      });
+    }
+    const deposit = JSON.parse(out).address
+
+    if (pending !== 0) {
+      await awaitExec(`rm ${filePath}`);
+      return res_.send({
+        result: false,
+        status: FAIL,
+        message: "estimateInscribe stderr",
+      });
+    }
+    pending = 1
+    const lastOrder = await Inscribe.find().sort({ order: -1 })
+    const order = lastOrder && lastOrder.length > 0 ? lastOrder[0].order + 1 : 1
+    const inscribe = new Inscribe({
+      order,
+      ordinal,
+      deposit,
+      satoshi,
+      feeRate,
+    })
+    console.log('pass')
+
+    try {
+      await inscribe.save();
+    } catch (error) {
+      console.log('error', error)
+      await awaitExec(`rm ${filePath}`);
+      return res_.send({
+        result: false,
+        status: FAIL,
+        message: "estimateInscribe stderr",
+      });
+    }
+    pending = 0
+
     await awaitExec(`rm ${filePath}`);
     return res_.send({
-      result: JSON.parse(stdout).fees,
+      result: {
+        satoshi,
+        deposit,
+        order
+      },
       status: SUCCESS,
       message: "estimateInscribe success",
     });

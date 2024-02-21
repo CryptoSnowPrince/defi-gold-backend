@@ -8,6 +8,7 @@ dotenv.config();
 const EXPORT_OBJECT = {};
 
 const UNISAT_API_KEY_0 = '6231ea23b9fbb7a17dd49df9d88ba6686cbbd639a73160cf358bf2e1fdc07b1a' // cryptosnowprince
+const UNISAT_API_KEY_1 = '9118ac95edcd8840388dbc696405ce25166f3bd56a672fc58d3bb01a14e45e33' // topdirector2017
 
 const NETWORK = 'testnet'
 const MEMPOOL_URL = `https://mempool.space${NETWORK === 'testnet' ? '/testnet' : ''}`
@@ -16,7 +17,8 @@ const ORD_CMD = `ord ${NETWORK === 'testnet' ? '-t' : ''} wallet`
 
 EXPORT_OBJECT.MEMPOOL_URL = MEMPOOL_URL
 EXPORT_OBJECT.UNISAT_API = UNISAT_API
-EXPORT_OBJECTORD_CMD = ORD_CMD
+EXPORT_OBJECT.ORD_CMD = ORD_CMD
+EXPORT_OBJECT.OUTPUT_UTXO = 546
 
 EXPORT_OBJECT.resetLog = () => {
   fs.writeFile("ordlog.log", content, (err) => {
@@ -54,7 +56,7 @@ EXPORT_OBJECT.writeOfferCheckLog = (contentString) => {
   });
 };
 
-EXPORT_OBJECT.PATH = '/taproot_nft/taproot-marketplace-backend';
+EXPORT_OBJECT.PATH = '/work/taproot/taproot-marketplace-backend';
 
 // Action Type
 EXPORT_OBJECT.ACTION_UNKNOWN = 0;
@@ -77,8 +79,7 @@ EXPORT_OBJECT.OFFER_COMPLETED = 4;
 EXPORT_OBJECT.INSCRIBE_UNKONWN = -1;
 EXPORT_OBJECT.INSCRIBE_CREATED = 0;
 EXPORT_OBJECT.INSCRIBE_COMPLETED = 1;
-EXPORT_OBJECT.INSCRIBE_CANCELED = 2;
-EXPORT_OBJECT.INSCRIBE_WITHDRAW = 3;
+EXPORT_OBJECT.INSCRIBE_ERR = 2;
 
 // Artifact Type
 EXPORT_OBJECT.ARTIFACT_UNKONWN = -1;
@@ -102,8 +103,8 @@ EXPORT_OBJECT.ARTIFACT_WEBM = 16;
 EXPORT_OBJECT.ARTIFACT_WEBP = 17;
 EXPORT_OBJECT.ARTIFACT_YAML = 18;
 
-EXPORT_OBJECT.SERVICE_FEE = 40000;
-EXPORT_OBJECT.OUTPUT_UTXO = 10000;
+EXPORT_OBJECT.SERVICE_FEE = 10000;
+EXPORT_OBJECT.OUTPUT_UTXO = 546;
 
 // Categories
 EXPORT_OBJECT.CATEGORY_UNKONWN = 0;
@@ -212,6 +213,30 @@ EXPORT_OBJECT.getInscriptionInfo = async (inscriptionId) => {
 
       const response = await axios.request(options)
       if (response.data.code === 0) {
+        return response.data.data
+      }
+      return false
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+  return null
+}
+
+EXPORT_OBJECT.getAddressInfoByUnisat = async (address) => {
+  if (address) {
+    try {
+      const options = {
+        method: 'GET',
+        url: `${UNISAT_API}/v1/indexer/address/${address}/balance`,
+        headers: {
+          Authorization: `Bearer ${UNISAT_API_KEY_1}`
+        }
+      };
+
+      const response = await axios.request(options)
+      if (response.data.msg === "ok") {
         return response.data.data
       }
       return false
