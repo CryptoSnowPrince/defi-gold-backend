@@ -91,7 +91,6 @@ module.exports = async (req_, res_) => {
       satoshi,
       feeRate,
     })
-    console.log('pass')
 
     try {
       await inscribe.save();
