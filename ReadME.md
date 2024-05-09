@@ -1,4 +1,4 @@
-# taproot-marketplace-backend
+# Defi Gold Backend
 
 ## ENV
 
