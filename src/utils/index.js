@@ -13,7 +13,7 @@ const UNISAT_API_KEY_1 = '9118ac95edcd8840388dbc696405ce25166f3bd56a672fc58d3bb0
 const NETWORK = 'testnet'
 const MEMPOOL_URL = `https://mempool.space${NETWORK === 'testnet' ? '/testnet' : ''}`
 const UNISAT_API = `https://open-api${NETWORK === 'testnet' ? '-testnet' : ''}.unisat.io`
-const ORD_CMD = `ord ${NETWORK === 'testnet' ? '-t' : ''} wallet`
+const ORD_CMD = `ord ${NETWORK === 'testnet' ? '-t' : ''} wallet --server-url ${NETWORK === 'testnet' ? 'http://127.0.0.1:8888' : 'http://127.0.0.1:9999'}`
 
 EXPORT_OBJECT.MEMPOOL_URL = MEMPOOL_URL
 EXPORT_OBJECT.UNISAT_API = UNISAT_API
@@ -224,6 +224,7 @@ EXPORT_OBJECT.getInscriptionInfo = async (inscriptionId) => {
   return null
 }
 
+// unused
 EXPORT_OBJECT.getAddressInfoByUnisat = async (address) => {
   if (address) {
     try {
