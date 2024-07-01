@@ -65,7 +65,7 @@ module.exports = async (req_, res_) => {
     }
 
     // balance check
-    await delay(1000)
+    // await delay(3000)
     const options = {
       method: 'GET',
       url: `${MEMPOOL_URL}/api/address/${deposit}`,
@@ -74,6 +74,7 @@ module.exports = async (req_, res_) => {
       }
     };
     const response = await axios.request(options)
+    console.log('chargeSats response: ', response.data)
     const chargeSats =
       response.data.chain_stats.funded_txo_sum +
       response.data.mempool_stats.funded_txo_sum -
@@ -81,8 +82,8 @@ module.exports = async (req_, res_) => {
       response.data.mempool_stats.spent_txo_count;
 
     console.log('chargeSats: ', chargeSats)
-    if (chargeSats < satoshi) {
-      const newPath = `/work/taproot/taproot-marketplace-backend/uploads/${order}`
+    if (chargeSats < satoshi && false) {
+      const newPath = `/work/dgold/defi-gold-backend/uploads/${order}`
       await awaitExec(`mv ${filePath} ${newPath}`);
       Inscribe.updateOne({ order }, {
         filePath: newPath,

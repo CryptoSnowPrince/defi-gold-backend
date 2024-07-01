@@ -56,7 +56,7 @@ EXPORT_OBJECT.writeOfferCheckLog = (contentString) => {
   });
 };
 
-EXPORT_OBJECT.PATH = '/work/taproot/taproot-marketplace-backend';
+EXPORT_OBJECT.PATH = '/work/dgold/defi-gold-backend';
 
 // Action Type
 EXPORT_OBJECT.ACTION_UNKNOWN = 0;

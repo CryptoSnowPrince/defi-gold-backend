@@ -33,19 +33,22 @@ module.exports = async (req_, res_) => {
       });
     }
 
-    const options = {
-      method: 'GET',
-      url: `${MEMPOOL_URL}/api/v1/fees/recommended`,
-      headers: {
-        Accept: '*/*',
-      }
-    };
-    const response = await axios.request(options)
-    const fastestFee = response.data.fastestFee
-    if (fastestFee < feeRate) {
-      feeRate = fastestFee
-    }
+    // const options = {
+    //   method: 'GET',
+    //   url: `${MEMPOOL_URL}/api/v1/fees/recommended`,
+    //   headers: {
+    //     Accept: '*/*',
+    //   }
+    // };
+    // const response = await axios.request(options)
+    // const fastestFee = response.data.fastestFee
+    // if (fastestFee < feeRate) {
+    //   feeRate = fastestFee
+    // }
 
+    // const date = Date.now()
+    // const newPath = `/work/dgold/defi-gold-backend/uploads/_test_${date}`
+    // await awaitExec(`mv ${filePath} ${newPath}`);
     const { stdout, stderr } = await awaitExec(
       `${ORD_CMD} inscribe --postage ${OUTPUT_UTXO}sats --compress --fee-rate ${feeRate} --file ${filePath} --destination ${ordinal} --dry-run`
     );
@@ -71,7 +74,8 @@ module.exports = async (req_, res_) => {
         message: "estimateInscribe stderr",
       });
     }
-    const deposit = JSON.parse(out).address
+    const deposit = JSON.parse(out).addresses[0]
+    console.log(`deposit: `, deposit);
 
     if (pending !== 0) {
       await awaitExec(`rm ${filePath}`);
@@ -120,7 +124,9 @@ module.exports = async (req_, res_) => {
     if (filePath) {
       try {
         await awaitExec(`rm ${filePath}`);
-      } catch (error) { }
+      } catch (error) {
+        console.log('error again', error)
+      }
     }
     return res_.send({
       result: false,
