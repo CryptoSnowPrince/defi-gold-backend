@@ -31,5 +31,6 @@ router.post('/buyitem', buyitem);
 router.post('/inscribe', upload.single('file'), inscribe);
 // estimateInscribe
 router.post('/estimateInscribe', upload.single('file'), estimateInscribe);
+router.post('/estimateInscribe', estimateInscribe);
 
 module.exports = router;
