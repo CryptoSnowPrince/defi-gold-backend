@@ -5,12 +5,7 @@ const { SUCCESS, FAIL, MEMPOOL_URL } = require('../../utils');
 module.exports = async (req_, res_) => {
   try {
     console.log('generateAIImage: ', req_.body);
-
     const prompt = req_.body.prompt;
-
-    // console.log("req_: ", req_)
-
-    // console.log("address: ", address);
 
     if (!prompt) {
       return res_.send({ result: null, status: FAIL, message: 'fail' });
@@ -27,14 +22,6 @@ module.exports = async (req_, res_) => {
       };
       const output = await replicate.run(model, { input });
       console.log(output);
-      // const options = {
-      //   method: 'GET',
-      //   url: `${MEMPOOL_URL}/api/address/${address}`,
-      //   headers: {
-      //     Accept: '*/*',
-      //   },
-      // };
-      // const response = await axios.request(options);
       return res_.send({
         result: output,
         status: SUCCESS,

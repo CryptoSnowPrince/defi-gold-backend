@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const db = require('./db');
 const api = require('./api');
 const app = express();
+const path = require('path');
 
 db.mongoose
   .connect(db.url, {
@@ -25,5 +26,6 @@ app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
+app.use('/download', express.static(path.join(__dirname, '../uploads')));
 app.use('/api', api);
 module.exports = app;

@@ -48,7 +48,6 @@ async function downloadImage(url, filepath) {
 }
 
 module.exports = async (req_, res_) => {
-  console.log('h3hh3');
   let filePath = null;
   try {
     console.log('estimateInscribe: ');
@@ -167,12 +166,11 @@ module.exports = async (req_, res_) => {
 
     await awaitExec(`rm ${filePath}`);
     return res_.send({
-      // result: {
-      //   satoshi,
-      //   deposit,
-      //   order,
-      // },
-      result: null,
+      result: {
+        satoshi,
+        deposit,
+        order,
+      },
       status: SUCCESS,
       message: 'estimateInscribe success',
     });
