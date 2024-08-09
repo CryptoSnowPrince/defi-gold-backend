@@ -5,7 +5,7 @@
   "main": "/src/index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "start-server": "npx pm2 start ./src/index.js --name defi-gold-backend",
+    "start-server": "npx pm2 start ./src/index.js --name dgold-nft-backend",
     "stop-server": "npx pm2 stop ./src/index.js"
   },
   "author": "",

@@ -29,7 +29,11 @@ module.exports = async (req_, res_) => {
     const tipAddress = String(req_.body.artLink);
     const ownerAddress = String(req_.body.ownerAddress);
     const ownerEmail = String(req_.body.ownerEmail);
-    const inscriptionList = req_.body.hashList;
+    const inscriptionList = [];
+    JSON.parse(req_.body.hashList).map((item) => {
+      inscriptionList.push(item.inscriptionID);
+    });
+    console.log(inscriptionList);
     const collection = new Collection({title, symbol, description, icon, image, derivated, artLink, originalName, primaryCategory, secondCategory, twitter, discord, website, tipAddress, ownerAddress, ownerEmail, depositAddress, inscriptionList});
     try {
       await collection.save();

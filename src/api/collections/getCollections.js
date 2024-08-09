@@ -55,8 +55,8 @@ module.exports = async (req_, res_) => {
         } catch (error) {
           console.error('Error:', error);
         }
-        const listedItems = await List.find({address: collectionList[i].ownerAddress});
-        collections[i] = {...collectionList[i], total: inscriptionRes.data.data.inscription.length, listed: listedItems.length}
+        const listedItems = await List.find({inscriptionId: { $in: collectionList[i].inscriptionList }});
+        collections[i] = {...collectionList[i], total: collectionList[i].inscriptionList.length, listed: listedItems.length}
       }
       return res_.send({ result: collections, status: SUCCESS, message: 'ok' });
     } catch (error) {
