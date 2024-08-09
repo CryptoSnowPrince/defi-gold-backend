@@ -46,6 +46,7 @@ module.exports = async (req_, res_) => {
             const inscriptionRes = await axios.request(options2);
             if (inscriptionRes.data.code === 0) {
               inscripts = inscriptionRes.data.data.inscription;
+              inscripts = inscripts.filter((item) => collection.inscriptionList.includes(item.inscriptionId));
               const listedItems = await List.find({address: collection.ownerAddress});
               inscriptions = inscripts.map((item) => {
                 return {...item, isListed: listedItems.findIndex(it => it.inscriptionId === item.inscriptionId) >= 0 ? true : false}
