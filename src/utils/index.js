@@ -9,15 +9,20 @@ const EXPORT_OBJECT = {};
 
 const UNISAT_API_KEY_0 = '6231ea23b9fbb7a17dd49df9d88ba6686cbbd639a73160cf358bf2e1fdc07b1a' // cryptosnowprince
 const UNISAT_API_KEY_1 = '9118ac95edcd8840388dbc696405ce25166f3bd56a672fc58d3bb01a14e45e33' // topdirector2017
+const UNISAT_API_KEY_4 = 'af86509f50d854685beb01b004e4a1eab801164d5a9109643b57428666340b05'; // cavelionhunter
 
 const NETWORK = 'testnet'
 const MEMPOOL_URL = `https://mempool.space${NETWORK === 'testnet' ? '/testnet' : ''}`
 const UNISAT_API = `https://open-api${NETWORK === 'testnet' ? '-testnet' : ''}.unisat.io`
 const ORD_CMD = `ord ${NETWORK === 'testnet' ? '-t' : ''} wallet --server-url ${NETWORK === 'testnet' ? 'http://127.0.0.1:8888' : 'http://127.0.0.1:9999'}`
+const ORD_RECEIVE_CMD = `ord ${NETWORK === 'testnet' ? '-t' : ''} wallet receive --server-url ${NETWORK === 'testnet' ? 'http://127.0.0.1:8888' : 'http://127.0.0.1:9999'}`
 
+EXPORT_OBJECT.UNISAT_API_KEY_0 = UNISAT_API_KEY_0
+EXPORT_OBJECT.UNISAT_API_KEY_4 = UNISAT_API_KEY_4
 EXPORT_OBJECT.MEMPOOL_URL = MEMPOOL_URL
 EXPORT_OBJECT.UNISAT_API = UNISAT_API
 EXPORT_OBJECT.ORD_CMD = ORD_CMD
+EXPORT_OBJECT.ORD_RECEIVE_CMD = ORD_RECEIVE_CMD
 EXPORT_OBJECT.OUTPUT_UTXO = 546
 
 EXPORT_OBJECT.resetLog = () => {
@@ -222,6 +227,22 @@ EXPORT_OBJECT.getInscriptionInfo = async (inscriptionId) => {
     }
   }
   return null
+}
+
+EXPORT_OBJECT.isValidBitcoinAddress = (address) => {
+  const p2shRegex = /^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  const p2wpkhRegex = /^bc1[q][a-z0-9]{39,59}$/;
+  const p2trRegex = /^bc1[p][a-z0-9]{59}$/;
+
+  if (p2shRegex.test(address)) {
+    return 'P2SH';
+  } else if (p2wpkhRegex.test(address)) {
+    return 'P2WPKH';
+  } else if (p2trRegex.test(address)) {
+    return 'P2TR';
+  } else {
+    return 'Invalid';
+  }
 }
 
 // unused
